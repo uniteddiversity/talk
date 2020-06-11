@@ -29,6 +29,7 @@ export interface Config {
   /** Allow setting className of body tag inside iframe */
   bodyClassName?: string;
   customCSSURL?: string;
+  amp?: boolean;
 }
 
 export function createStreamEmbed(config: Config): StreamEmbed {
@@ -43,7 +44,7 @@ export function createStreamEmbed(config: Config): StreamEmbed {
   return create({
     title: "Coral Embed Stream",
     storyID: config.storyID || query.storyID,
-    storyURL: config.storyURL || resolveStoryURL(),
+    storyURL: config.storyURL || query.storyURL || resolveStoryURL(),
     commentID: config.commentID || query.commentID,
     id: config.id || "coral-embed-stream",
     rootURL: config.rootURL || getLocationOrigin(),
@@ -54,5 +55,6 @@ export function createStreamEmbed(config: Config): StreamEmbed {
     enableDeprecatedEvents: config.enableDeprecatedEvents,
     customCSSURL: config.customCSSURL,
     refreshAccessToken: config.refreshAccessToken,
+    amp: config.amp,
   });
 }

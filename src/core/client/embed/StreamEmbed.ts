@@ -5,6 +5,7 @@ import ensureNoEndSlash from "coral-common/utils/ensureNoEndSlash";
 import urls from "coral-framework/helpers/urls";
 import { ExternalConfig } from "coral-framework/lib/externalConfig";
 
+import { createInMemoryStorage } from "coral-framework/lib/storage";
 import { RefreshAccessTokenCallback } from "./Coral";
 import {
   Decorator,
@@ -40,6 +41,7 @@ export interface StreamEmbedConfig {
   enableDeprecatedEvents?: boolean;
   customCSSURL?: string;
   refreshAccessToken?: RefreshAccessTokenCallback;
+  amp?: boolean;
 }
 
 export class StreamEmbed {
@@ -140,9 +142,26 @@ export class StreamEmbed {
       bodyClassName: this.config.bodyClassName,
     };
 
+    let localStorage: Storage;
+    try {
+      localStorage = window.localStorage;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.debug("Local Storage not available, use in-memory replacement");
+      localStorage = createInMemoryStorage();
+    }
+    let sessionStorage: Storage;
+    try {
+      sessionStorage = window.sessionStorage;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.debug("Session Storage not available, use in-memory replacement");
+      sessionStorage = createInMemoryStorage();
+    }
+
     const streamDecorators: ReadonlyArray<Decorator> = [
       withIOSSafariWidthWorkaround,
-      withAutoHeight,
+      withAutoHeight(Boolean(this.config.amp)),
       withClickEvent,
       withSetCommentID,
       withEventEmitter(
