@@ -703,6 +703,7 @@ const enhanced = withContext(({ eventEmitter }) => ({ eventEmitter }))(
             ...UserTagsContainer_settings
             ...MediaSectionContainer_settings
             ...UsernameWithPopoverContainer_settings
+            ...CaretContainer_settings
           }
         `,
       })(CommentContainer)
