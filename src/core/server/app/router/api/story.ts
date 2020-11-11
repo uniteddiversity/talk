@@ -1,5 +1,9 @@
 import { AppOptions } from "coral-server/app";
-import { activeHandler, countHandler } from "coral-server/app/handlers";
+import {
+  activeHandler,
+  countHandler,
+  countJSONPHandler,
+} from "coral-server/app/handlers";
 import cacheMiddleware from "coral-server/app/middleware/cache";
 
 import { createAPIRouter } from "./helpers";
@@ -14,7 +18,8 @@ export function createStoryRouter(app: AppOptions) {
     router.use(cacheMiddleware(app.redis, cacheDuration));
   }
 
-  router.get("/count.js", countHandler(app));
+  router.get("/count", countHandler(app));
+  router.get("/count.js", countJSONPHandler(app));
   router.get("/active.js", activeHandler(app));
 
   return router;
